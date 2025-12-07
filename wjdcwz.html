@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>井冈山红色康养旅游项目用户调研问卷</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8b0000 0%, #b22222 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #8b0000;
+        }
+        
+        .jinggangshan-bg {
+            height: 180px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="%238b0000"/><path d="M0,150 L100,50 L200,150 L300,50 L400,150 L400,200 L0,200 Z" fill="%234a7c59"/><circle cx="200" cy="100" r="20" fill="%23ffd700"/></svg>');
+            background-size: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h1 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            font-size: 32px;
+        }
+        
+        .intro {
+            background-color: #fff8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.8;
+            border-left: 5px solid #8b0000;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .section-title {
+            color: #8b0000;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ffcdd2;
+            font-size: 22px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 17px;
+            color: #444;
+        }
+        
+        .options {
+            margin-left: 10px;
+        }
+        
+        .option {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        input[type="text"], input[type="email"], input[type="tel"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-height: 120px;
+            font-size: 15px;
+            resize: vertical;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #c62828;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(to right, #8b0000, #b22222);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: block;
+            margin: 40px auto 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background: linear-gradient(to right, #b22222, #8b0000);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        
+        input[type="radio"], input[type="checkbox"] {
+            cursor: pointer;
+        }
+        
+        .form-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .jinggangshan-bg {
+                height: 140px;
+                font-size: 20px;
+            }
+            
+            .checkbox-group, .radio-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="jinggangshan-bg">
+                革命圣地 · 井冈山
+            </div>
+            <h1>井冈山红色康养旅游项目用户调研问卷</h1>
+            <p class="subtitle">传承红色基因 · 体验生态康养</p>
+			<a href="https://qingheng717.github.io/diaochawenjuan/wjdcht.html" class="subtitle">您是管理员？点此进入管理后台！</a>
+        </header>
+        
+        <div class="intro">
+            <p>尊敬的参与者：</p>
+            <p>感谢您参与我们的调研！我们正在井冈山规划一个融合红色教育、生态康养与休闲体验的旅游项目，旨在打造"红色教育+生态康养"的创新旅游模式。井冈山作为中国革命的摇篮，拥有丰富的红色资源和优美的自然环境，我们希望借助您的宝贵意见，打造更符合市场需求的旅游服务。</p>
+            <p>本问卷约需8-10分钟完成，所有信息将严格保密，仅用于项目研究分析。</p>
+        </div>
+        
+        <div class="form-message" id="formMessage"></div>
+        
+        <form id="survey-form">
+            <!-- 个人基本信息 -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-user"></i> 个人基本信息</h2>
+                
+                <div class="question">
+                    <div class="question-title required">性别</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="male" name="gender" value="男" required>
+                            <label for="male">男</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="female" name="gender" value="女">
+                            <label for="female">女</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="no-gender" name="gender" value="不愿透露">
+                            <label for="no-gender">不愿透露</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">年龄段</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="age1" name="age" value="18-25岁" required>
+                            <label for="age1">18-25岁</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="age2" name="age" value="26-35岁">
+                            <label for="age2">26-35岁</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="age3" name="age" value="36-45岁">
+                            <label for="age3">36-45岁</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="age4" name="age" value="46-55岁">
+                            <label for="age4">46-55岁</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="age5" name="age" value="56-65岁">
+                            <label for="age5">56-65岁</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="age6" name="age" value="65岁以上">
+                            <label for="age6">65岁以上</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">职业</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="job1" name="job" value="学生" required>
+                            <label for="job1">学生</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="job2" name="job" value="企业职员">
+                            <label for="job2">企业职员</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="job3" name="job" value="公务员/事业单位">
+                            <label for="job3">公务员/事业单位</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="job4" name="job" value="自由职业">
+                            <label for="job4">自由职业</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="job5" name="job" value="退休人员">
+                            <label for="job5">退休人员</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">月收入</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="income1" name="income" value="3000元以下" required>
+                            <label for="income1">3000元以下</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="income2" name="income" value="3000-6000元">
+                            <label for="income2">3000-6000元</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="income3" name="income" value="6000-10000元">
+                            <label for="income3">6000-10000元</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="income4" name="income" value="10000-20000元">
+                            <label for="income4">10000-20000元</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="income5" name="income" value="20000元以上">
+                            <label for="income5">20000元以上</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">常住地区</div>
+                    <input type="text" id="region" name="region" placeholder="例如：江西省南昌市" required>
+                </div>
+            </div>
+            
+            <!-- 旅游习惯与偏好 -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-plane"></i> 旅游习惯与偏好</h2>
+                
+                <div class="question">
+                    <div class="question-title required">您通常每年旅游几次？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="travel1" name="travel-frequency" value="1次" required>
+                            <label for="travel1">1次</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="travel2" name="travel-frequency" value="2-3次">
+                            <label for="travel2">2-3次</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="travel3" name="travel-frequency" value="4-5次">
+                            <label for="travel3">4-5次</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="travel4" name="travel-frequency" value="5次以上">
+                            <label for="travel4">5次以上</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您偏好的旅游类型是？（可多选）</div>
+                    <div class="options checkbox-group">
+                        <div class="option">
+                            <input type="checkbox" id="type1" name="travel-type" value="自然风光">
+                            <label for="type1">自然风光</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="type2" name="travel-type" value="历史文化">
+                            <label for="type2">历史文化</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="type3" name="travel-type" value="红色教育">
+                            <label for="type3">红色教育</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="type4" name="travel-type" value="康养休闲">
+                            <label for="type4">康养休闲</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="type5" name="travel-type" value="乡村体验">
+                            <label for="type5">乡村体验</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="type6" name="travel-type" value="都市购物">
+                            <label for="type6">都市购物</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您通常通过什么渠道了解旅游信息？（可多选）</div>
+                    <div class="options checkbox-group">
+                        <div class="option">
+                            <input type="checkbox" id="channel1" name="info-channel" value="朋友推荐">
+                            <label for="channel1">朋友推荐</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="channel2" name="info-channel" value="旅游网站/APP">
+                            <label for="channel2">旅游网站/APP</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="channel3" name="info-channel" value="社交媒体">
+                            <label for="channel3">社交媒体</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="channel4" name="info-channel" value="旅行社">
+                            <label for="channel4">旅行社</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="channel5" name="info-channel" value="电视/报纸">
+                            <label for="channel5">电视/报纸</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您能接受的单次旅游预算是多少？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="budget1" name="budget" value="1000元以下" required>
+                            <label for="budget1">1000元以下</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="budget2" name="budget" value="1000-2000元">
+                            <label for="budget2">1000-2000元</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="budget3" name="budget" value="2000-3000元">
+                            <label for="budget3">2000-3000元</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="budget4" name="budget" value="3000-5000元">
+                            <label for="budget4">3000-5000元</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="budget5" name="budget" value="5000元以上">
+                            <label for="budget5">5000元以上</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 井冈山红色康养旅游项目兴趣度 -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-mountain"></i> 井冈山红色康养旅游项目兴趣度</h2>
+                
+                <div class="question">
+                    <div class="question-title required">您对"井冈山红色教育+康养体验"结合的旅游模式感兴趣吗？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="interest1" name="interest" value="非常感兴趣" required>
+                            <label for="interest1">非常感兴趣</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="interest2" name="interest" value="比较感兴趣">
+                            <label for="interest2">比较感兴趣</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="interest3" name="interest" value="一般">
+                            <label for="interest3">一般</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="interest4" name="interest" value="不太感兴趣">
+                            <label for="interest4">不太感兴趣</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="interest5" name="interest" value="完全不感兴趣">
+                            <label for="interest5">完全不感兴趣</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您认为井冈山红色康养旅游最吸引您的是什么？（可多选）</div>
+                    <div class="options checkbox-group">
+                        <div class="option">
+                            <input type="checkbox" id="attract1" name="attraction" value="接受革命教育">
+                            <label for="attract1">接受革命教育</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="attract2" name="attraction" value="放松身心">
+                            <label for="attract2">放松身心</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="attract3" name="attraction" value="体验自然">
+                            <label for="attract3">体验自然</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="attract4" name="attraction" value="增进亲友感情">
+                            <label for="attract4">增进亲友感情</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="attract5" name="attraction" value="学习健康知识">
+                            <label for="attract5">学习健康知识</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="attract6" name="attraction" value="品尝特色美食">
+                            <label for="attract6">品尝特色美食</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您希望在井冈山红色康养旅游中获得哪些体验？（可多选）</div>
+                    <div class="options checkbox-group">
+                        <div class="option">
+                            <input type="checkbox" id="exp1" name="experience" value="参观革命遗址">
+                            <label for="exp1">参观革命遗址（如井冈山革命博物馆）</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="exp2" name="experience" value="听老红军故事">
+                            <label for="exp2">听老红军/后代讲述革命故事</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="exp3" name="experience" value="红色文化表演">
+                            <label for="exp3">观看红色文化表演</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="exp4" name="experience" value="中医养生讲座">
+                            <label for="exp4">中医养生讲座</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="exp5" name="experience" value="森林浴/自然疗法">
+                            <label for="exp5">井冈山森林浴/自然疗法</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="exp6" name="experience" value="有机膳食体验">
+                            <label for="exp6">井冈山有机膳食体验</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您认为井冈山红色康养旅游的合适时长是？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="duration1" name="duration" value="1-2天" required>
+                            <label for="duration1">1-2天</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="duration2" name="duration" value="3-4天">
+                            <label for="duration2">3-4天</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="duration3" name="duration" value="5-7天">
+                            <label for="duration3">5-7天</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="duration4" name="duration" value="7天以上">
+                            <label for="duration4">7天以上</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 项目细节偏好 -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-concierge-bell"></i> 项目细节偏好</h2>
+                
+                <div class="question">
+                    <div class="question-title required">在井冈山旅游，您偏好的住宿类型是？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="accom1" name="accommodation" value="精品酒店" required>
+                            <label for="accom1">精品酒店</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="accom2" name="accommodation" value="特色民宿">
+                            <label for="accom2">特色民宿</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="accom3" name="accommodation" value="康养度假村">
+                            <label for="accom3">康养度假村</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="accom4" name="accommodation" value="农家乐">
+                            <label for="accom4">农家乐</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您对井冈山旅游中的餐饮有何期待？（可多选）</div>
+                    <div class="options checkbox-group">
+                        <div class="option">
+                            <input type="checkbox" id="food1" name="food" value="当地特色美食">
+                            <label for="food1">当地特色美食</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="food2" name="food" value="有机健康餐">
+                            <label for="food2">有机健康餐</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="food3" name="food" value="药膳食疗">
+                            <label for="food3">药膳食疗</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="food4" name="food" value="素食选择">
+                            <label for="food4">素食选择</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="food5" name="food" value="普通餐饮即可">
+                            <label for="food5">普通餐饮即可</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您愿意为井冈山红色康养旅游支付的溢价主要基于？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="premium1" name="premium" value="专业讲解服务" required>
+                            <label for="premium1">专业讲解服务</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="premium2" name="premium" value="高品质住宿">
+                            <label for="premium2">高品质住宿</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="premium3" name="premium" value="特色康养项目">
+                            <label for="premium3">特色康养项目</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="premium4" name="premium" value="个性化体验">
+                            <label for="premium4">个性化体验</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 项目可行性评估 -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> 项目可行性评估</h2>
+                
+                <div class="question">
+                    <div class="question-title required">您是否愿意将井冈山红色康养旅游推荐给亲友？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="recommend1" name="recommend" value="非常愿意" required>
+                            <label for="recommend1">非常愿意</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="recommend2" name="recommend" value="比较愿意">
+                            <label for="recommend2">比较愿意</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="recommend3" name="recommend" value="不确定">
+                            <label for="recommend3">不确定</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="recommend4" name="recommend" value="不太愿意">
+                            <label for="recommend4">不太愿意</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title required">您认为井冈山红色康养旅游项目最可能面临的挑战是？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="challenge1" name="challenge" value="市场认知度低" required>
+                            <label for="challenge1">市场认知度低</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="challenge2" name="challenge" value="价格偏高">
+                            <label for="challenge2">价格偏高</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="challenge3" name="challenge" value="内容同质化">
+                            <label for="challenge3">内容同质化</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="challenge4" name="challenge" value="交通不便">
+                            <label for="challenge4">交通不便</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title">您是否愿意参与项目初期的体验活动？</div>
+                    <div class="options radio-group">
+                        <div class="option">
+                            <input type="radio" id="trial1" name="trial" value="愿意">
+                            <label for="trial1">愿意</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="trial2" name="trial" value="暂不考虑">
+                            <label for="trial2">暂不考虑</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-title">您对井冈山红色康养旅游项目有何其他建议？</div>
+                    <textarea id="suggestion" name="suggestion" placeholder="请在此输入您的宝贵建议..."></textarea>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-submit">提交问卷</button>
+        </form>
+        
+        <div class="footer">
+            <p>感谢您参与本次调研！您的意见对我们非常重要。</p>
+            <p>© 2025 井冈山红色康养旅游项目组 | 联系电话：XXXX-XXXXXXX</p>
+        </div>
+    </div>
+
+    <script>
+        // 表单提交处理
+        document.getElementById('survey-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 收集表单数据
+            const formData = new FormData(this);
+            const data = {};
+            
+            // 处理单选和文本输入
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            // 处理多选（checkbox）
+            const checkboxes = this.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                if (!data[checkbox.name]) {
+                    data[checkbox.name] = [];
+                }
+                if (Array.isArray(data[checkbox.name])) {
+                    data[checkbox.name].push(checkbox.value);
+                }
+            });
+            
+            // 添加时间戳
+            data.timestamp = new Date().toISOString();
+            data.id = Date.now(); // 简单ID生成
+            
+            // 存储数据到LocalStorage
+            saveSurveyData(data);
+            
+            // 显示成功消息
+            showMessage('问卷提交成功！感谢您的参与。', 'success');
+            
+            // 重置表单
+            this.reset();
+            
+            // 3秒后自动滚动到顶部
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 1000);
+        });
+        
+        // 保存数据到LocalStorage
+        function saveSurveyData(data) {
+            // 从LocalStorage获取现有数据
+            let surveys = JSON.parse(localStorage.getItem('jinggangshan_surveys') || '[]');
+            
+            // 添加新数据
+            surveys.push(data);
+            
+            // 保存回LocalStorage
+            localStorage.setItem('jinggangshan_surveys', JSON.stringify(surveys));
+            
+            // 自动处理数据并生成报告
+            processSurveyData();
+        }
+        
+        // 处理调查数据并生成报告
+        function processSurveyData() {
+            // 获取所有调查数据
+            const surveys = JSON.parse(localStorage.getItem('jinggangshan_surveys') || '[]');
+            
+            if (surveys.length === 0) return;
+            
+            // 计算统计数据
+            const report = {
+                totalSurveys: surveys.length,
+                gender: calculatePercentage(surveys, 'gender'),
+                age: calculatePercentage(surveys, 'age'),
+                job: calculatePercentage(surveys, 'job'),
+                income: calculatePercentage(surveys, 'income'),
+                region: calculatePercentage(surveys, 'region'),
+                travelFrequency: calculatePercentage(surveys, 'travel-frequency'),
+                travelType: calculateMultiSelectPercentage(surveys, 'travel-type'),
+                infoChannel: calculateMultiSelectPercentage(surveys, 'info-channel'),
+                budget: calculatePercentage(surveys, 'budget'),
+                interest: calculatePercentage(surveys, 'interest'),
+                attraction: calculateMultiSelectPercentage(surveys, 'attraction'),
+                experience: calculateMultiSelectPercentage(surveys, 'experience'),
+                duration: calculatePercentage(surveys, 'duration'),
+                accommodation: calculatePercentage(surveys, 'accommodation'),
+                food: calculateMultiSelectPercentage(surveys, 'food'),
+                premium: calculatePercentage(surveys, 'premium'),
+                recommend: calculatePercentage(surveys, 'recommend'),
+                challenge: calculatePercentage(surveys, 'challenge'),
+                trial: calculatePercentage(surveys, 'trial'),
+                suggestions: surveys.filter(s => s.suggestion && s.suggestion.trim() !== '').map(s => s.suggestion),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            // 保存报告到LocalStorage
+            localStorage.setItem('jinggangshan_report', JSON.stringify(report));
+            
+            console.log('数据报告已更新:', report);
+        }
+        
+        // 计算单选问题的百分比
+        function calculatePercentage(data, field) {
+            const counts = {};
+            let total = 0;
+            
+            data.forEach(item => {
+                if (item[field]) {
+                    counts[item[field]] = (counts[item[field]] || 0) + 1;
+                    total++;
+                }
+            });
+            
+            const result = {};
+            for (const [key, count] of Object.entries(counts)) {
+                result[key] = {
+                    count: count,
+                    percentage: total > 0 ? Math.round((count / total) * 10000) / 100 : 0
+                };
+            }
+            
+            return result;
+        }
+        
+        // 计算多选问题的百分比
+        function calculateMultiSelectPercentage(data, field) {
+            const counts = {};
+            let total = 0;
+            
+            data.forEach(item => {
+                if (item[field]) {
+                    const values = Array.isArray(item[field]) ? item[field] : [item[field]];
+                    values.forEach(value => {
+                        counts[value] = (counts[value] || 0) + 1;
+                    });
+                    total++;
+                }
+            });
+            
+            const result = {};
+            for (const [key, count] of Object.entries(counts)) {
+                result[key] = {
+                    count: count,
+                    percentage: total > 0 ? Math.round((count / total) * 10000) / 100 : 0
+                };
+            }
+            
+            return result;
+        }
+        
+        // 显示消息
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('formMessage');
+            messageDiv.textContent = message;
+            messageDiv.className = `form-message ${type}-message`;
+            messageDiv.style.display = 'block';
+            
+            // 5秒后隐藏消息
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 页面加载时检查是否有现有数据
+        window.addEventListener('load', () => {
+            const surveys = JSON.parse(localStorage.getItem('jinggangshan_surveys') || '[]');
+            console.log(`已有 ${surveys.length} 份问卷数据`);
+            
+            // 如果有数据，自动处理
+            if (surveys.length > 0) {
+                processSurveyData();
+            }
+        });
+    </script>
+</body>
+</html>
