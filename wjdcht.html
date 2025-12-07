@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>井冈山红色康养旅游项目 - 数据管理平台</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        /* 登录界面样式 */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            padding: 40px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%231a1a2e"/><path d="M0,200 L100,100 L200,200 L300,100 L400,200 L400,300 L0,300 Z" fill="%238b0000"/><circle cx="200" cy="150" r="30" fill="%23ffd700"/></svg>');
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        
+        .login-form {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-form h2 {
+            color: #8b0000;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #8b0000;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2);
+        }
+        
+        .login-btn {
+            background: linear-gradient(to right, #8b0000, #b22222);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(to right, #b22222, #8b0000);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .error-message {
+            color: #ff3333;
+            background-color: #ffe6e6;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .login-hint {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        /* 管理界面样式 */
+        .admin-container {
+            display: none;
+        }
+        
+        .admin-header {
+            background: linear-gradient(to right, #8b0000, #b22222);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 24px;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .refresh-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .admin-content {
+            padding: 30px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #8b0000;
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .data-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            color: #8b0000;
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toggle-chart {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+            gap: 25px;
+        }
+        
+        .data-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-card h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .data-card h4 i {
+            margin-right: 10px;
+            color: #8b0000;
+        }
+        
+        .chart-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            height: 280px;
+            position: relative;
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+
+        }
+        
+        .chart {
+            height: 180px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .chart-bar {
+            width: 30px;
+            background-color: #8b0000;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+        
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+        
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            transform: rotate(-45deg);
+            transform-origin: top left;
+            white-space: nowrap;
+        }
+        
+        .chart-bar-value {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* 饼图容器 */
+        .pie-container {
+            height: 180px;
+            position: relative;
+            margin: 0 auto;
+            width: 180px;
+        }
+        
+        .pie-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .pie-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
+        
+        .data-summary {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .highlight {
+            background-color: #fff8f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border-left: 4px solid #8b0000;
+        }
+        
+        .recommendation-box {
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .recommendation-box h5 {
+            color: #007bff;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .suggestions-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+        
+        .suggestion-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        
+        .data-note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .export-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .export-btn:hover {
+            background-color: #218838;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-stats, .data-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-content {
+                padding: 20px;
+            }
+            
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 登录界面 -->
+        <div class="login-container" id="loginContainer">
+            <div class="login-form">
+                <h2>井冈山红色康养项目</h2>
+                <h3>数据管理平台</h3>
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码">
+                </div>
+                <button class="login-btn" onclick="login()">登录</button>
+                <div class="error-message" id="errorMessage">用户名或密码错误，请重试！</div>
+                <div class="login-hint">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 管理界面 -->
+        <div class="admin-container" id="adminContainer">
+            <div class="admin-header">
+                <h1>井冈山红色康养旅游项目 - 数据管理平台</h1>
+                <div class="header-controls">
+                    <button class="refresh-btn" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> 刷新数据
+                    </button>
+                    <button class="logout-btn" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div id="dashboardContent">
+                    <!-- 内容将通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 预设的账号信息
+        const USERNAME = '250200254';
+        const PASSWORD = '123456';
+        
+        // 登录函数
+        function login() {
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // 验证账号密码
+            if (usernameInput === USERNAME && passwordInput === PASSWORD) {
+                // 登录成功
+                errorMessage.style.display = 'none';
+                
+                // 隐藏登录界面，显示管理界面
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminContainer').style.display = 'block';
+                
+                // 存储登录状态到本地存储
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', usernameInput);
+                
+                // 加载数据并生成报告
+                loadAndDisplayData();
+            } else {
+                // 登录失败
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        }
+        
+        // 退出登录函数
+        function logout() {
+            // 清除登录状态
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            
+            // 显示登录界面，隐藏管理界面
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('adminContainer').style.display = 'none';
+            
+            // 清空输入框
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        // 刷新数据
+        function refreshData() {
+            loadAndDisplayData();
+        }
+        
+        // 检查是否已经登录
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                // 如果已经登录，直接显示管理界面
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminContainer').style.display = 'block';
+                
+                // 加载数据并生成报告
+                loadAndDisplayData();
+            }
+            
+            // 添加回车键登录功能
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        };
+        
+        // 加载数据并显示报告
+        function loadAndDisplayData() {
+            const dashboardContent = document.getElementById('dashboardContent');
+            
+            // 从LocalStorage获取报告数据
+            const report = JSON.parse(localStorage.getItem('jinggangshan_report') || '{}');
+            
+            // 获取原始调查数据
+            const surveys = JSON.parse(localStorage.getItem('jinggangshan_surveys') || '[]');
+            
+            // 如果数据为空，显示提示
+            if (surveys.length === 0) {
+                dashboardContent.innerHTML = `
+                    <div class="highlight">
+                        <h3>暂无数据</h3>
+                        <p>尚未收到任何问卷数据。请确保用户已完成问卷调查。</p>
+                        <p>您可以：</p>
+                        <ol>
+                            <li>分享问卷调查链接给用户</li>
+                            <li>等待用户提交问卷</li>
+                            <li>点击"刷新数据"按钮更新数据</li>
+                        </ol>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 生成报告HTML
+            dashboardContent.innerHTML = generateReportHTML(report, surveys);
+            
+            // 初始化图表
+            initCharts(report);
+        }
+        
+        // 生成报告HTML
+        function generateReportHTML(report, surveys) {
+            const lastUpdated = report.lastUpdated ? new Date(report.lastUpdated).toLocaleString('zh-CN') : '从未更新';
+            
+            return `
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>有效答卷数</h3>
+                        <div class="stat-value">${surveys.length} 份</div>
+                        <p>数据来源：问卷调查收集</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>数据最后更新</h3>
+                        <div class="stat-value">${lastUpdated}</div>
+                        <p>自动处理并生成报告</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>男性受访者比例</h3>
+                        <div class="stat-value">${report.gender && report.gender['男'] ? report.gender['男'].percentage + '%' : '0%'}</div>
+                        <p>女性受访者：${report.gender && report.gender['女'] ? report.gender['女'].percentage + '%' : '0%'}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>项目兴趣度</h3>
+                        <div class="stat-value">${report.interest && report.interest['非常感兴趣'] ? report.interest['非常感兴趣'].percentage + '%' : '0%'}</div>
+                        <p>非常感兴趣的比例</p>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h2 class="section-title">受访者基本信息分析
+                        <div class="section-controls">
+                            <button class="toggle-chart" onclick="toggleCharts('basic')">切换视图</button>
+                            <button class="export-btn" onclick="exportData('basic')">导出数据</button>
+                        </div>
+                    </h2>
+                    <div class="data-grid" id="basicCharts">
+                        ${generateBasicChartsHTML(report)}
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h2 class="section-title">旅游习惯与偏好分析
+                        <div class="section-controls">
+                            <button class="toggle-chart" onclick="toggleCharts('travel')">切换视图</button>
+                            <button class="export-btn" onclick="exportData('travel')">导出数据</button>
+                        </div>
+                    </h2>
+                    <div class="data-grid" id="travelCharts">
+                        ${generateTravelChartsHTML(report)}
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h2 class="section-title">项目兴趣度与偏好分析
+                        <div class="section-controls">
+                            <button class="toggle-chart" onclick="toggleCharts('interest')">切换视图</button>
+                            <button class="export-btn" onclick="exportData('interest')">导出数据</button>
+                        </div>
+                    </h2>
+                    <div class="data-grid" id="interestCharts">
+                        ${generateInterestChartsHTML(report)}
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h2 class="section-title">项目可行性评估
+                        <div class="section-controls">
+                            <button class="toggle-chart" onclick="toggleCharts('feasibility')">切换视图</button>
+                            <button class="export-btn" onclick="exportData('feasibility')">导出数据</button>
+                        </div>
+                    </h2>
+                    <div class="data-grid" id="feasibilityCharts">
+                        ${generateFeasibilityChartsHTML(report)}
+                    </div>
+                </div>
+                
+                ${report.suggestions && report.suggestions.length > 0 ? `
+                <div class="data-section">
+                    <h2 class="section-title">用户建议汇总
+                        <div class="section-controls">
+                            <button class="export-btn" onclick="exportSuggestions()">导出建议</button>
+                        </div>
+                    </h2>
+                    <div class="highlight">
+                        <p>共收到 ${report.suggestions.length} 条用户建议：</p>
+                        <div class="suggestions-list">
+                            ${report.suggestions.map((suggestion, index) => `
+                                <div class="suggestion-item">
+                                    <strong>建议 ${index + 1}:</strong> ${suggestion}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="data-section">
+                    <h2 class="section-title">原始数据查看
+                        <div class="section-controls">
+                            <button class="export-btn" onclick="exportAllData()">导出所有数据</button>
+                        </div>
+                    </h2>
+                    <div class="highlight">
+                        <p>共收集到 ${surveys.length} 份完整问卷数据：</p>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>提交时间</th>
+                                    <th>性别</th>
+                                    <th>年龄</th>
+                                    <th>职业</th>
+                                    <th>地区</th>
+                                    <th>项目兴趣</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${surveys.slice(0, 10).map(survey => `
+                                    <tr>
+                                        <td>${survey.id ? survey.id.toString().substring(0, 8) : 'N/A'}</td>
+                                        <td>${survey.timestamp ? new Date(survey.timestamp).toLocaleDateString('zh-CN') : 'N/A'}</td>
+                                        <td>${survey.gender || 'N/A'}</td>
+                                        <td>${survey.age || 'N/A'}</td>
+                                        <td>${survey.job || 'N/A'}</td>
+                                        <td>${survey.region || 'N/A'}</td>
+                                        <td>${survey.interest || 'N/A'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${surveys.length > 10 ? `<p style="margin-top: 10px;">... 还有 ${surveys.length - 10} 条数据未显示</p>` : ''}
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <p>报告生成于 ${new Date().toLocaleString('zh-CN')} | 数据来源：问卷调查收集系统</p>
+                    <p>© 2025 井冈山红色康养旅游项目组 | 数据管理平台</p>
+                    <p class="data-note">* 此报告基于 ${surveys.length} 份有效问卷数据自动生成</p>
+                </div>
+            `;
+        }
+        
+        // 生成基本信息图表HTML
+        function generateBasicChartsHTML(report) {
+            return `
+                <!-- 性别分布图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-venus-mars"></i> 1. 性别分布</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">性别分布比例</div>
+                        <div class="pie-container">
+                            <div class="pie-center">100%</div>
+                            <svg class="pie-svg" viewBox="0 0 100 100" id="genderChart">
+                                <!-- 饼图将通过JS生成 -->
+                            </svg>
+                        </div>
+                        <div class="legend" id="genderLegend"></div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateGenderSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 年龄分布图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-user-friends"></i> 2. 年龄分布</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">各年龄段受访者比例</div>
+                        <div class="chart" id="ageChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateAgeSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 职业分布图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-briefcase"></i> 3. 职业分布</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">受访者职业分布比例</div>
+                        <div class="chart" id="jobChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateJobSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 收入分布图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-money-bill-wave"></i> 4. 月收入分布</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">受访者月收入分布</div>
+                        <div class="chart" id="incomeChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateIncomeSummary(report)}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 生成旅游习惯图表HTML
+        function generateTravelChartsHTML(report) {
+            return `
+                <!-- 旅游频率图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-plane"></i> 5. 旅游频率</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">每年旅游次数分布</div>
+                        <div class="chart" id="travelFrequencyChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateTravelFrequencySummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 旅游类型偏好图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-umbrella-beach"></i> 6. 旅游类型偏好</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">偏好的旅游类型（多选）</div>
+                        <div class="chart" id="travelTypeChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateTravelTypeSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 旅游信息渠道图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-info-circle"></i> 7. 旅游信息渠道</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">获取旅游信息的渠道（多选）</div>
+                        <div class="chart" id="infoChannelChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateInfoChannelSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 旅游预算图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-money-check-alt"></i> 8. 单次旅游预算</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">可接受的单次旅游预算</div>
+                        <div class="chart" id="budgetChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateBudgetSummary(report)}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 生成项目兴趣度图表HTML
+        function generateInterestChartsHTML(report) {
+            return `
+                <!-- 项目兴趣度图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-heart"></i> 9. 项目兴趣度</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">对"红色教育+康养体验"模式的兴趣度</div>
+                        <div class="pie-container">
+                            <div class="pie-center">100%</div>
+                            <svg class="pie-svg" viewBox="0 0 100 100" id="interestChart">
+                                <!-- 饼图将通过JS生成 -->
+                            </svg>
+                        </div>
+                        <div class="legend" id="interestLegend"></div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateInterestSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 吸引力因素图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-star"></i> 10. 主要吸引力因素</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">井冈山红色康养旅游吸引力因素（多选）</div>
+                        <div class="chart" id="attractionChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateAttractionSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 期望体验图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-hiking"></i> 11. 期望的旅游体验</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">希望在井冈山获得的体验（多选）</div>
+                        <div class="chart" id="experienceChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateExperienceSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 旅游时长图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-clock"></i> 12. 合适的旅游时长</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">井冈山红色康养旅游合适时长</div>
+                        <div class="chart" id="durationChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateDurationSummary(report)}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 生成项目可行性图表HTML
+        function generateFeasibilityChartsHTML(report) {
+            return `
+                <!-- 推荐意愿图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-share-alt"></i> 13. 推荐意愿</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">是否愿意推荐给亲友</div>
+                        <div class="chart" id="recommendChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateRecommendSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 主要挑战图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-exclamation-triangle"></i> 14. 主要挑战</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">项目最可能面临的挑战</div>
+                        <div class="chart" id="challengeChart">
+                            <!-- 柱状图将通过JS生成 -->
+                        </div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateChallengeSummary(report)}</p>
+                    </div>
+                </div>
+                
+                <!-- 初期体验活动参与意愿图表 -->
+                <div class="data-card">
+                    <h4><i class="fas fa-calendar-check"></i> 15. 初期体验活动参与意愿</h4>
+                    <div class="chart-container">
+                        <div class="chart-title">是否愿意参与项目初期体验活动</div>
+                        <div class="pie-container">
+                            <div class="pie-center">100%</div>
+                            <svg class="pie-svg" viewBox="0 0 100 100" id="trialChart">
+                                <!-- 饼图将通过JS生成 -->
+                            </svg>
+                        </div>
+                        <div class="legend" id="trialLegend"></div>
+                    </div>
+                    <div class="data-summary">
+                        <p><strong>数据说明：</strong>${generateTrialSummary(report)}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 生成数据摘要的函数
+        function generateGenderSummary(report) {
+            if (!report.gender) return "暂无数据";
+            const male = report.gender['男'] ? report.gender['男'].percentage : 0;
+            const female = report.gender['女'] ? report.gender['女'].percentage : 0;
+            const other = report.gender['不愿透露'] ? report.gender['不愿透露'].percentage : 0;
+            return `男性比例：${male}%，女性比例：${female}%，不愿透露：${other}%`;
+        }
+        
+        function generateAgeSummary(report) {
+            if (!report.age) return "暂无数据";
+            const ageGroups = Object.keys(report.age);
+            if (ageGroups.length === 0) return "暂无数据";
+            
+            // 找到比例最高的年龄段
+            let maxAge = ageGroups[0];
+            let maxPercentage = report.age[maxAge] ? report.age[maxAge].percentage : 0;
+            
+            for (const age of ageGroups) {
+                if (report.age[age] && report.age[age].percentage > maxPercentage) {
+                    maxAge = age;
+                    maxPercentage = report.age[age].percentage;
+                }
+            }
+            
+            return `主要受访者年龄段为${maxAge}，占比${maxPercentage}%`;
+        }
+        
+        function generateJobSummary(report) {
+            if (!report.job) return "暂无数据";
+            const jobs = Object.keys(report.job);
+            if (jobs.length === 0) return "暂无数据";
+            
+            // 找到比例最高的职业
+            let maxJob = jobs[0];
+            let maxPercentage = report.job[maxJob] ? report.job[maxJob].percentage : 0;
+            
+            for (const job of jobs) {
+                if (report.job[job] && report.job[job].percentage > maxPercentage) {
+                    maxJob = job;
+                    maxPercentage = report.job[job].percentage;
+                }
+            }
+            
+            return `主要受访者职业为${maxJob}，占比${maxPercentage}%`;
+        }
+        
+        function generateIncomeSummary(report) {
+            if (!report.income) return "暂无数据";
+            const incomes = Object.keys(report.income);
+            if (incomes.length === 0) return "暂无数据";
+            
+            // 找到比例最高的收入段
+            let maxIncome = incomes[0];
+            let maxPercentage = report.income[maxIncome] ? report.income[maxIncome].percentage : 0;
+            
+            for (const income of incomes) {
+                if (report.income[income] && report.income[income].percentage > maxPercentage) {
+                    maxIncome = income;
+                    maxPercentage = report.income[income].percentage;
+                }
+            }
+            
+            return `主要受访者月收入为${maxIncome}，占比${maxPercentage}%`;
+        }
+        
+        function generateTravelFrequencySummary(report) {
+            if (!report.travelFrequency) return "暂无数据";
+            const frequencies = Object.keys(report.travelFrequency);
+            if (frequencies.length === 0) return "暂无数据";
+            
+            // 找到比例最高的旅游频率
+            let maxFreq = frequencies[0];
+            let maxPercentage = report.travelFrequency[maxFreq] ? report.travelFrequency[maxFreq].percentage : 0;
+            
+            for (const freq of frequencies) {
+                if (report.travelFrequency[freq] && report.travelFrequency[freq].percentage > maxPercentage) {
+                    maxFreq = freq;
+                    maxPercentage = report.travelFrequency[freq].percentage;
+                }
+            }
+            
+            return `大多数受访者每年旅游${maxFreq}，占比${maxPercentage}%`;
+        }
+        
+        function generateTravelTypeSummary(report) {
+            if (!report.travelType) return "暂无数据";
+            const types = Object.keys(report.travelType);
+            if (types.length === 0) return "暂无数据";
+            
+            // 找到比例最高的旅游类型
+            let maxType = types[0];
+            let maxPercentage = report.travelType[maxType] ? report.travelType[maxType].percentage : 0;
+            
+            for (const type of types) {
+                if (report.travelType[type] && report.travelType[type].percentage > maxPercentage) {
+                    maxType = type;
+                    maxPercentage = report.travelType[type].percentage;
+                }
+            }
+            
+            return `最受欢迎的旅游类型是${maxType}，${maxPercentage}%的受访者选择此项`;
+        }
+        
+        function generateInfoChannelSummary(report) {
+            if (!report.infoChannel) return "暂无数据";
+            const channels = Object.keys(report.infoChannel);
+            if (channels.length === 0) return "暂无数据";
+            
+            // 找到比例最高的信息渠道
+            let maxChannel = channels[0];
+            let maxPercentage = report.infoChannel[maxChannel] ? report.infoChannel[maxChannel].percentage : 0;
+            
+            for (const channel of channels) {
+                if (report.infoChannel[channel] && report.infoChannel[channel].percentage > maxPercentage) {
+                    maxChannel = channel;
+                    maxPercentage = report.infoChannel[channel].percentage;
+                }
+            }
+            
+            return `主要旅游信息获取渠道是${maxChannel}，${maxPercentage}%的受访者使用此渠道`;
+        }
+        
+        function generateBudgetSummary(report) {
+            if (!report.budget) return "暂无数据";
+            const budgets = Object.keys(report.budget);
+            if (budgets.length === 0) return "暂无数据";
+            
+            // 找到比例最高的预算区间
+            let maxBudget = budgets[0];
+            let maxPercentage = report.budget[maxBudget] ? report.budget[maxBudget].percentage : 0;
+            
+            for (const budget of budgets) {
+                if (report.budget[budget] && report.budget[budget].percentage > maxPercentage) {
+                    maxBudget = budget;
+                    maxPercentage = report.budget[budget].percentage;
+                }
+            }
+            
+            return `大多数受访者接受${maxBudget}元的单次旅游预算，占比${maxPercentage}%`;
+        }
+        
+        function generateInterestSummary(report) {
+            if (!report.interest) return "暂无数据";
+            
+            const positive = (report.interest['非常感兴趣'] ? report.interest['非常感兴趣'].percentage : 0) + 
+                            (report.interest['比较感兴趣'] ? report.interest['比较感兴趣'].percentage : 0);
+            const neutral = report.interest['一般'] ? report.interest['一般'].percentage : 0;
+            const negative = (report.interest['不太感兴趣'] ? report.interest['不太感兴趣'].percentage : 0) + 
+                            (report.interest['完全不感兴趣'] ? report.interest['完全不感兴趣'].percentage : 0);
+            
+            return `对项目持积极态度的受访者占${positive}%，中立态度占${neutral}%，消极态度占${negative}%`;
+        }
+        
+        function generateAttractionSummary(report) {
+            if (!report.attraction) return "暂无数据";
+            const attractions = Object.keys(report.attraction);
+            if (attractions.length === 0) return "暂无数据";
+            
+            // 找到比例最高的吸引力因素
+            let maxAttr = attractions[0];
+            let maxPercentage = report.attraction[maxAttr] ? report.attraction[maxAttr].percentage : 0;
+            
+            for (const attr of attractions) {
+                if (report.attraction[attr] && report.attraction[attr].percentage > maxPercentage) {
+                    maxAttr = attr;
+                    maxPercentage = report.attraction[attr].percentage;
+                }
+            }
+            
+            return `最吸引游客的因素是${maxAttr}，${maxPercentage}%的受访者选择此项`;
+        }
+        
+        function generateExperienceSummary(report) {
+            if (!report.experience) return "暂无数据";
+            const experiences = Object.keys(report.experience);
+            if (experiences.length === 0) return "暂无数据";
+            
+            // 找到比例最高的期望体验
+            let maxExp = experiences[0];
+            let maxPercentage = report.experience[maxExp] ? report.experience[maxExp].percentage : 0;
+            
+            for (const exp of experiences) {
+                if (report.experience[exp] && report.experience[exp].percentage > maxPercentage) {
+                    maxExp = exp;
+                    maxPercentage = report.experience[exp].percentage;
+                }
+            }
+            
+            return `游客最期望的体验是${maxExp}，${maxPercentage}%的受访者选择此项`;
+        }
+        
+        function generateDurationSummary(report) {
+            if (!report.duration) return "暂无数据";
+            const durations = Object.keys(report.duration);
+            if (durations.length === 0) return "暂无数据";
+            
+            // 找到比例最高的旅游时长
+            let maxDuration = durations[0];
+            let maxPercentage = report.duration[maxDuration] ? report.duration[maxDuration].percentage : 0;
+            
+            for (const duration of durations) {
+                if (report.duration[duration] && report.duration[duration].percentage > maxPercentage) {
+                    maxDuration = duration;
+                    maxPercentage = report.duration[duration].percentage;
+                }
+            }
+            
+            return `大多数受访者认为${maxDuration}是最合适的旅游时长，占比${maxPercentage}%`;
+        }
+        
+        function generateRecommendSummary(report) {
+            if (!report.recommend) return "暂无数据";
+            
+            const positive = (report.recommend['非常愿意'] ? report.recommend['非常愿意'].percentage : 0) + 
+                            (report.recommend['比较愿意'] ? report.recommend['比较愿意'].percentage : 0);
+            const neutral = report.recommend['不确定'] ? report.recommend['不确定'].percentage : 0;
+            const negative = (report.recommend['不太愿意'] ? report.recommend['不太愿意'].percentage : 0);
+            
+            return `${positive}%的受访者愿意推荐项目给亲友，${neutral}%不确定，${negative}%不太愿意`;
+        }
+        
+        function generateChallengeSummary(report) {
+            if (!report.challenge) return "暂无数据";
+            const challenges = Object.keys(report.challenge);
+            if (challenges.length === 0) return "暂无数据";
+            
+            // 找到比例最高的挑战
+            let maxChallenge = challenges[0];
+            let maxPercentage = report.challenge[maxChallenge] ? report.challenge[maxChallenge].percentage : 0;
+            
+            for (const challenge of challenges) {
+                if (report.challenge[challenge] && report.challenge[challenge].percentage > maxPercentage) {
+                    maxChallenge = challenge;
+                    maxPercentage = report.challenge[challenge].percentage;
+                }
+            }
+            
+            return `项目面临的最大挑战是${maxChallenge}，${maxPercentage}%的受访者认为这是主要挑战`;
+        }
+        
+        function generateTrialSummary(report) {
+            if (!report.trial) return "暂无数据";
+            
+            const willing = report.trial['愿意'] ? report.trial['愿意'].percentage : 0;
+            const notWilling = report.trial['暂不考虑'] ? report.trial['暂不考虑'].percentage : 0;
+            
+            return `${willing}%的受访者愿意参与初期体验活动，${notWilling}%暂不考虑`;
+        }
+        
+        // 初始化图表
+        function initCharts(report) {
+            // 性别分布饼图
+            if (report.gender) {
+                createPieChart('genderChart', 'genderLegend', report.gender, [
+                    {value: '男', color: '#8b0000'},
+                    {value: '女', color: '#b22222'},
+                    {value: '不愿透露', color: '#666'}
+                ]);
+            }
+            
+            // 年龄分布柱状图
+            if (report.age) {
+                createBarChart('ageChart', report.age, [
+                    {label: '18-25岁', color: '#8b0000'},
+                    {label: '26-35岁', color: '#b22222'},
+                    {label: '36-45岁', color: '#d9534f'},
+                    {label: '46-55岁', color: '#f0ad4e'},
+                    {label: '56-65岁', color: '#5bc0de'},
+                    {label: '65岁以上', color: '#5cb85c'}
+                ]);
+            }
+            
+            // 职业分布柱状图
+            if (report.job) {
+                createBarChart('jobChart', report.job, [
+                    {label: '学生', color: '#8b0000'},
+                    {label: '企业职员', color: '#b22222'},
+                    {label: '公务员/事业单位', color: '#d9534f'},
+                    {label: '自由职业', color: '#f0ad4e'},
+                    {label: '退休人员', color: '#5bc0de'}
+                ]);
+            }
+            
+            // 收入分布柱状图
+            if (report.income) {
+                createBarChart('incomeChart', report.income, [
+                    {label: '3000元以下', color: '#8b0000'},
+                    {label: '3000-6000元', color: '#b22222'},
+                    {label: '6000-10000元', color: '#d9534f'},
+                    {label: '10000-20000元', color: '#f0ad4e'},
+                    {label: '20000元以上', color: '#5bc0de'}
+                ]);
+            }
+            
+            // 旅游频率柱状图
+            if (report.travelFrequency) {
+                createBarChart('travelFrequencyChart', report.travelFrequency, [
+                    {label: '1次', color: '#8b0000'},
+                    {label: '2-3次', color: '#b22222'},
+                    {label: '4-5次', color: '#d9534f'},
+                    {label: '5次以上', color: '#f0ad4e'}
+                ]);
+            }
+            
+            // 旅游类型偏好柱状图
+            if (report.travelType) {
+                createBarChart('travelTypeChart', report.travelType, [
+                    {label: '自然风光', color: '#8b0000'},
+                    {label: '历史文化', color: '#b22222'},
+                    {label: '红色教育', color: '#d9534f'},
+                    {label: '康养休闲', color: '#f0ad4e'},
+                    {label: '乡村体验', color: '#5bc0de'},
+                    {label: '都市购物', color: '#5cb85c'}
+                ]);
+            }
+            
+            // 旅游信息渠道柱状图
+            if (report.infoChannel) {
+                createBarChart('infoChannelChart', report.infoChannel, [
+                    {label: '朋友推荐', color: '#8b0000'},
+                    {label: '社交媒体', color: '#b22222'},
+                    {label: '旅游网站/APP', color: '#d9534f'},
+                    {label: '旅行社', color: '#f0ad4e'},
+                    {label: '电视/报纸', color: '#5bc0de'}
+                ]);
+            }
+            
+            // 旅游预算柱状图
+            if (report.budget) {
+                createBarChart('budgetChart', report.budget, [
+                    {label: '1000元以下', color: '#8b0000'},
+                    {label: '1000-2000元', color: '#b22222'},
+                    {label: '2000-3000元', color: '#d9534f'},
+                    {label: '3000-5000元', color: '#f0ad4e'},
+                    {label: '5000元以上', color: '#5bc0de'}
+                ]);
+            }
+            
+            // 项目兴趣度饼图
+            if (report.interest) {
+                createPieChart('interestChart', 'interestLegend', report.interest, [
+                    {value: '非常感兴趣', color: '#5cb85c'},
+                    {value: '比较感兴趣', color: '#5bc0de'},
+                    {value: '一般', color: '#f0ad4e'},
+                    {value: '不太感兴趣', color: '#f0ad4e'},
+                    {value: '完全不感兴趣', color: '#d9534f'}
+                ]);
+            }
+            
+            // 吸引力因素柱状图
+            if (report.attraction) {
+                createBarChart('attractionChart', report.attraction, [
+                    {label: '放松身心', color: '#8b0000'},
+                    {label: '接受革命教育', color: '#b22222'},
+                    {label: '体验自然', color: '#d9534f'},
+                    {label: '品尝特色美食', color: '#f0ad4e'},
+                    {label: '学习健康知识', color: '#5bc0de'},
+                    {label: '增进亲友感情', color: '#5cb85c'}
+                ]);
+            }
+            
+            // 期望体验柱状图
+            if (report.experience) {
+                createBarChart('experienceChart', report.experience, [
+                    {label: '参观革命遗址', color: '#8b0000'},
+                    {label: '听老红军故事', color: '#b22222'},
+                    {label: '井冈山森林浴', color: '#d9534f'},
+                    {label: '徒步登山', color: '#f0ad4e'},
+                    {label: '有机膳食体验', color: '#5bc0de'},
+                    {label: '中医养生讲座', color: '#5cb85c'}
+                ]);
+            }
+            
+            // 旅游时长柱状图
+            if (report.duration) {
+                createBarChart('durationChart', report.duration, [
+                    {label: '1-2天', color: '#8b0000'},
+                    {label: '3-4天', color: '#b22222'},
+                    {label: '5-7天', color: '#d9534f'},
+                    {label: '7天以上', color: '#f0ad4e'}
+                ]);
+            }
+            
+            // 推荐意愿柱状图
+            if (report.recommend) {
+                createBarChart('recommendChart', report.recommend, [
+                    {label: '非常愿意', color: '#8b0000'},
+                    {label: '比较愿意', color: '#b22222'},
+                    {label: '不确定', color: '#f0ad4e'},
+                    {label: '不太愿意', color: '#d9534f'}
+                ]);
+            }
+            
+            // 主要挑战柱状图
+            if (report.challenge) {
+                createBarChart('challengeChart', report.challenge, [
+                    {label: '市场认知度低', color: '#8b0000'},
+                    {label: '价格偏高', color: '#b22222'},
+                    {label: '内容同质化', color: '#d9534f'},
+                    {label: '交通不便', color: '#f0ad4e'},
+                    {label: '服务不专业', color: '#5bc0de'}
+                ]);
+            }
+            
+            // 初期体验活动参与意愿饼图
+            if (report.trial) {
+                createPieChart('trialChart', 'trialLegend', report.trial, [
+                    {value: '愿意', color: '#5cb85c'},
+                    {value: '暂不考虑', color: '#d9534f'}
+                ]);
+            }
+        }
+        
+        // 创建柱状图
+        function createBarChart(containerId, data, colorConfig) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // 找出最大值用于计算比例
+            let maxValue = 0;
+            for (const key in data) {
+                if (data[key] && data[key].percentage > maxValue) {
+                    maxValue = data[key].percentage;
+                }
+            }
+            
+            if (maxValue === 0) return;
+            
+            // 为每个数据项创建柱状图
+            colorConfig.forEach(config => {
+                const itemData = data[config.label];
+                if (!itemData) return;
+                
+                const barHeight = (itemData.percentage / maxValue) * 100;
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${barHeight}%`;
+                bar.style.backgroundColor = config.color;
+                
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'chart-bar-value';
+                valueLabel.textContent = `${itemData.percentage}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'chart-bar-label';
+                label.textContent = config.label;
+                
+                bar.appendChild(valueLabel);
+                bar.appendChild(label);
+                container.appendChild(bar);
+            });
+        }
+        
+        // 创建饼状图 - 使用SVG方法
+        function createPieChart(containerId, legendId, data, colorConfig) {
+            const svg = document.getElementById(containerId);
+            const legend = document.getElementById(legendId);
+            
+            if (!svg || !legend) return;
+            
+            svg.innerHTML = '';
+            legend.innerHTML = '';
+            
+            // 过滤掉数据为0的项
+            const filteredData = {};
+            for (const config of colorConfig) {
+                if (data[config.value] && data[config.value].percentage > 0) {
+                    filteredData[config.value] = {
+                        percentage: data[config.value].percentage,
+                        color: config.color
+                    };
+                }
+            }
+            
+            const dataArray = Object.entries(filteredData);
+            
+            if (dataArray.length === 0) return;
+            
+            // 计算总数值
+            const total = dataArray.reduce((sum, [key, value]) => sum + value.percentage, 0);
+            
+            // 饼图参数
+            const radius = 40;
+            const centerX = 50;
+            const centerY = 50;
+            
+            let accumulatedAngle = 0;
+            
+            dataArray.forEach(([key, value]) => {
+                // 计算当前部分的角度（弧度）
+                const angle = (value.percentage / total) * 2 * Math.PI;
+                
+                // 计算起始点和结束点
+                const startAngle = accumulatedAngle;
+                const endAngle = startAngle + angle;
+                
+                // 计算圆弧的起始和结束坐标
+                const x1 = centerX + radius * Math.cos(startAngle);
+                const y1 = centerY + radius * Math.sin(startAngle);
+                const x2 = centerX + radius * Math.cos(endAngle);
+                const y2 = centerY + radius * Math.sin(endAngle);
+                
+                // 判断圆弧是否大于180度
+                const largeArcFlag = angle > Math.PI ? 1 : 0;
+                
+                // 创建路径
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                
+                // 构建路径数据
+                let pathData = `M ${centerX} ${centerY} `; // 移动到圆心
+                pathData += `L ${x1} ${y1} `; // 画线到起点
+                pathData += `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} `; // 画圆弧
+                pathData += "Z"; // 闭合路径
+                
+                path.setAttribute("d", pathData);
+                path.setAttribute("fill", value.color);
+                path.setAttribute("stroke", "#fff");
+                path.setAttribute("stroke-width", "1");
+                
+                svg.appendChild(path);
+                
+                // 添加图例
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                
+                const legendColor = document.createElement('div');
+                legendColor.className = 'legend-color';
+                legendColor.style.backgroundColor = value.color;
+                
+                const legendText = document.createElement('span');
+                legendText.textContent = `${key} (${value.percentage}%)`;
+                
+                legendItem.appendChild(legendColor);
+                legendItem.appendChild(legendText);
+                legend.appendChild(legendItem);
+                
+                accumulatedAngle = endAngle;
+            });
+        }
+        
+        // 切换图表视图
+        function toggleCharts(section) {
+            const sectionElement = document.getElementById(section + 'Charts');
+            if (!sectionElement) return;
+            
+            const cards = sectionElement.querySelectorAll('.data-card');
+            cards.forEach(card => {
+                const chartContainer = card.querySelector('.chart-container');
+                const dataSummary = card.querySelector('.data-summary');
+                
+                if (chartContainer && dataSummary) {
+                    if (chartContainer.style.display === 'none') {
+                        chartContainer.style.display = 'block';
+                        dataSummary.style.display = 'block';
+                    } else {
+                        chartContainer.style.display = 'none';
+                        dataSummary.style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // 导出数据
+        function exportData(section) {
+            const report = JSON.parse(localStorage.getItem('jinggangshan_report') || '{}');
+            const surveys = JSON.parse(localStorage.getItem('jinggangshan_surveys') || '[]');
+            
+            let dataToExport;
+            
+            switch(section) {
+                case 'basic':
+                    dataToExport = {
+                        性别分布: report.gender,
+                        年龄分布: report.age,
+                        职业分布: report.job,
+                        收入分布: report.income
+                    };
+                    break;
+                case 'travel':
+                    dataToExport = {
+                        旅游频率: report.travelFrequency,
+                        旅游类型偏好: report.travelType,
+                        旅游信息渠道: report.infoChannel,
+                        旅游预算: report.budget
+                    };
+                    break;
+                case 'interest':
+                    dataToExport = {
+                        项目兴趣度: report.interest,
+                        吸引力因素: report.attraction,
+                        期望体验: report.experience,
+                        合适时长: report.duration
+                    };
+                    break;
+                case 'feasibility':
+                    dataToExport = {
+                        推荐意愿: report.recommend,
+                        主要挑战: report.challenge,
+                        初期体验参与意愿: report.trial
+                    };
+                    break;
+                default:
+                    dataToExport = report;
+            }
+            
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `井冈山红色康养项目_${section}_数据_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // 导出建议
+        function exportSuggestions() {
+            const report = JSON.parse(localStorage.getItem('jinggangshan_report') || '{}');
+            
+            if (!report.suggestions || report.suggestions.length === 0) {
+                alert('暂无用户建议可导出');
+                return;
+            }
+            
+            const suggestionsText = report.suggestions.map((suggestion, index) => 
+                `建议 ${index + 1}: ${suggestion}`
+            ).join('\n\n');
+            
+            const dataStr = `井冈山红色康养项目用户建议汇总\n生成时间: ${new Date().toLocaleString('zh-CN')}\n\n${suggestionsText}`;
+            const dataUri = 'data:text/plain;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `井冈山红色康养项目_用户建议_${new Date().toISOString().split('T')[0]}.txt`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // 导出所有数据
+        function exportAllData() {
+            const report = JSON.parse(localStorage.getItem('jinggangshan_report') || '{}');
+            const surveys = JSON.parse(localStorage.getItem('jinggangshan_surveys') || '[]');
+            
+            const allData = {
+                报告生成时间: new Date().toISOString(),
+                问卷总数: surveys.length,
+                统计分析报告: report,
+                原始问卷数据: surveys
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `井冈山红色康养项目_完整数据_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+    </script>
+</body>
+</html>
